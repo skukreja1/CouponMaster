@@ -8,6 +8,7 @@ import com.coupon.entity.CouponStatus;
 import com.coupon.repository.CampaignRepository;
 import com.coupon.repository.CouponBatchRepository;
 import com.coupon.repository.CouponRepository;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,7 @@ public class CouponBatchService {
     private final CampaignRepository campaignRepository;
     private final CouponRepository couponRepository;
     private final CouponGeneratorService couponGeneratorService;
+    private final EntityManager entityManager;
 
     private static final String PREFIX_START = "FF";
 
@@ -77,6 +79,7 @@ public class CouponBatchService {
                 .build();
 
         CouponBatch savedBatch = batchRepository.save(batch);
+        entityManager.flush();
         log.info("Created batch {} with prefix {} for campaign {}", savedBatch.getId(), prefix, campaign.getName());
 
         int generated = couponGeneratorService.generateCoupons(savedBatch, dto.getCouponCount());
