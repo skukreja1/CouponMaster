@@ -1,0 +1,254 @@
+(Spring Boot + Angular Serialized Coupon System)
+
+Role: You are a senior Java architect and Angular engineer.
+Build a production-grade coupon management system with the following requirements.
+
+🧱 TECH STACK
+
+Backend: Spring Boot Java 17
+
+Frontend: Angular (latest stable)
+
+Database: Oracle DB
+
+Auth: Spring Security Basic Login
+
+Build: Maven
+
+Deployment: Replit-compatible project structure
+
+🎟️ COUPON GENERATION RULES (STRICT)
+
+Coupon code format:
+
+FF + 4 user-defined characters + 8 random characters
+
+
+Prefix:
+
+Must start with "FF"
+
+Total prefix length exactly 6
+
+Serial:
+
+Fixed 8 characters
+
+Random A–Z + 0–9 only
+
+Mode:
+
+Always random
+
+Global uniqueness across the entire database (enforced by DB index)
+
+Max generation:
+
+3,000,000 coupons per batch
+
+Memory-safe generation:
+
+Use JDBC batch inserts (≤5000 rows per batch)
+
+Do NOT hold all coupons in memory
+
+📆 DATE VALIDATION
+
+Start Date ≥ Today
+
+Expiry Date ≥ Today
+
+Past dates must be rejected at generation time
+
+🧩 FEATURES
+Campaign Management
+
+Campaign name (required)
+
+Description (optional)
+
+Batch Management
+
+Generate coupons per campaign
+
+POS code & ATG code fields
+
+Validity window (start / expiry)
+
+Multi-use coupons (maxUsages)
+
+View batch history with stats
+
+Bulk edit:
+
+POS code
+
+ATG code
+
+Dates
+
+Max usages
+
+Soft delete / Reactivate entire batch
+
+Coupon Management
+
+Status lifecycle:
+
+ACTIVE
+
+INACTIVE
+
+EXPIRED
+
+MAX_USED
+
+Advanced filtering:
+
+Code / Prefix
+
+Status
+
+Campaign
+
+Creation date range
+
+🔁 COUPON REDEMPTION API
+
+Public endpoint (no auth)
+
+Validates:
+
+Coupon exists
+
+Active status
+
+Within date window
+
+Usage count < maxUsages
+
+Increments usage count
+
+Auto-disables when max usage reached
+
+📤 EXPORT
+
+CSV export:
+
+Per batch
+
+Full database
+
+Stream CSV responses (do not load entire dataset into memory)
+
+🔐 SECURITY
+
+Spring Security Basic Auth
+
+Admin-only access to:
+
+Generation
+
+Batch edits
+
+Exports
+
+In-memory admin user:
+
+username: admin
+
+password: admin123
+
+🗄️ DATABASE (ORACLE)
+
+Create:
+
+Tables:
+
+CAMPAIGN
+
+COUPON_BATCH
+
+COUPON
+
+Sequences for all IDs
+
+Indexes:
+
+Global unique index on COUPON.CODE
+
+Indexes for filtering & batch operations
+
+📁 PROJECT STRUCTURE
+/backend
+  └── Spring Boot (Java 17)
+/frontend
+  └── Angular
+
+✅ BACKEND MUST INCLUDE
+
+Oracle DDL (schema.sql)
+
+JPA entities
+
+JDBC batch coupon generator
+
+REST controllers:
+
+Campaign
+
+Batch
+
+Coupon search
+
+Redemption
+
+Export
+
+Service layer
+
+DTOs
+
+Validation annotations
+
+Clear comments explaining performance decisions
+
+✅ FRONTEND MUST INCLUDE
+
+Login screen
+
+Campaign management
+
+Batch generation form
+
+Batch history table
+
+Coupon search & filters
+
+CSV export buttons
+
+Angular Material UI
+
+Reactive forms
+
+⚠️ IMPORTANT
+
+Do NOT simplify or skip features
+
+Do NOT use in-memory coupon storage
+
+Code must be production-ready
+
+Optimize for 3,000,000 record batch generation
+
+🟢 OUTPUT EXPECTATION
+
+Generate:
+
+Complete Spring Boot backend code
+
+Oracle schema
+
+Angular frontend
+
+Clear instructions to run in Replit
