@@ -22,13 +22,13 @@ args = "Frontend"
 name = "Backend API"
 author = "agent"
 
+[workflows.workflow.metadata]
+outputType = "console"
+
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "cd /home/runner/workspace/backend && java -jar target/coupon-system-1.0.0.jar"
 waitForPort = 8080
-
-[workflows.workflow.metadata]
-outputType = "console"
 
 [[workflows.workflow]]
 name = "Frontend"
@@ -44,7 +44,7 @@ outputType = "webview"
 
 [[ports]]
 localPort = 5000
-externalPort = 5000
+externalPort = 80
 
 [[ports]]
 localPort = 8080
@@ -52,5 +52,5 @@ externalPort = 8080
 
 [deployment]
 deploymentTarget = "autoscale"
-run = ["bash", "-c", "cd /home/runner/workspace/backend && java -Dserver.port=5000 -jar target/coupon-system-1.0.0.jar"]
+run = ["java", "-Dserver.port=5000", "-jar", "/home/runner/workspace/backend/target/coupon-system-1.0.0.jar"]
 build = ["bash", "-c", "cd /home/runner/workspace/frontend && npm run build && mkdir -p /home/runner/workspace/backend/src/main/resources/static && cp -r dist/frontend/browser/* /home/runner/workspace/backend/src/main/resources/static/ && cd /home/runner/workspace/backend && mvn clean package -DskipTests"]
