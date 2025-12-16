@@ -26,8 +26,8 @@ export class CampaignDialogComponent {
     this.form = this.fb.group({
       name: [data?.name || '', [Validators.required, Validators.maxLength(255)]],
       description: [data?.description || '', Validators.maxLength(2000)],
-      posCode: [data?.posCode || '', Validators.maxLength(50)],
-      atgCode: [data?.atgCode || '', Validators.maxLength(50)],
+      posCode: [data?.posCode || '', [Validators.required, Validators.maxLength(50)]],
+      atgCode: [data?.atgCode || '', [Validators.required, Validators.maxLength(50)]],
       userPrefix: [data?.userPrefix || '', [Validators.required, Validators.minLength(4), Validators.maxLength(4), Validators.pattern(/^[A-Z0-9]{4}$/)]],
       maxUsages: [data?.maxUsages || 1, [Validators.required, Validators.min(1)]],
       startDate: [data?.startDate ? new Date(data.startDate) : '', Validators.required],

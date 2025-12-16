@@ -21,9 +21,11 @@ public class CampaignDTO {
     @Size(max = 2000, message = "Description must be less than 2000 characters")
     private String description;
 
+    @NotBlank(message = "POS code is required")
     @Size(max = 50, message = "POS code must be less than 50 characters")
     private String posCode;
 
+    @NotBlank(message = "ATG code is required")
     @Size(max = 50, message = "ATG code must be less than 50 characters")
     private String atgCode;
 
