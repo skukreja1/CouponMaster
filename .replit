@@ -51,4 +51,6 @@ localPort = 8080
 externalPort = 8080
 
 [deployment]
-deploymentTarget = "cloudrun"
+deploymentTarget = "autoscale"
+run = ["bash", "-c", "cd /home/runner/workspace/backend && java -Dserver.port=5000 -jar target/coupon-system-1.0.0.jar"]
+build = ["bash", "-c", "cd /home/runner/workspace/frontend && npm run build && mkdir -p /home/runner/workspace/backend/src/main/resources/static && cp -r dist/frontend/browser/* /home/runner/workspace/backend/src/main/resources/static/ && cd /home/runner/workspace/backend && mvn clean package -DskipTests"]
