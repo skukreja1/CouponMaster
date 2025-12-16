@@ -1,0 +1,132 @@
+<div class="container">
+  <h1 class="page-title">Coupon Search</h1>
+
+  <mat-card class="filters-panel">
+    <form [formGroup]="filterForm" (ngSubmit)="onSearch()">
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Code</mat-label>
+          <input matInput formControlName="code" placeholder="Search by code">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Prefix</mat-label>
+          <input matInput formControlName="prefix" placeholder="e.g., FFABCD">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Status</mat-label>
+          <mat-select formControlName="status">
+            <mat-option value="">All</mat-option>
+            <mat-option *ngFor="let status of statusOptions" [value]="status">
+              {{ status }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Campaign</mat-label>
+          <mat-select formControlName="campaignId">
+            <mat-option value="">All</mat-option>
+            <mat-option *ngFor="let campaign of campaigns" [value]="campaign.id">
+              {{ campaign.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Created From</mat-label>
+          <input matInput [matDatepicker]="fromPicker" formControlName="createdFrom">
+          <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
+          <mat-datepicker #fromPicker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Created To</mat-label>
+          <input matInput [matDatepicker]="toPicker" formControlName="createdTo">
+          <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
+          <mat-datepicker #toPicker></mat-datepicker>
+        </mat-form-field>
+
+        <div class="button-row">
+          <button mat-raised-button color="primary" type="submit">
+            <mat-icon>search</mat-icon>
+            Search
+          </button>
+          <button mat-button type="button" (click)="clearFilters()">
+            Clear
+          </button>
+        </div>
+      </div>
+    </form>
+  </mat-card>
+
+  <div *ngIf="loading" class="loading-spinner">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <div *ngIf="!loading" class="table-container">
+    <table mat-table [dataSource]="coupons">
+      <ng-container matColumnDef="code">
+        <th mat-header-cell *matHeaderCellDef>Code</th>
+        <td mat-cell *matCellDef="let coupon">
+          <strong>{{ coupon.code }}</strong>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="campaign">
+        <th mat-header-cell *matHeaderCellDef>Campaign</th>
+        <td mat-cell *matCellDef="let coupon">{{ coupon.campaignName }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let coupon">
+          <span [class]="getStatusClass(coupon.status)">{{ coupon.status }}</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="usages">
+        <th mat-header-cell *matHeaderCellDef>Usages</th>
+        <td mat-cell *matCellDef="let coupon">
+          {{ coupon.usageCount }} / {{ coupon.maxUsages }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="dates">
+        <th mat-header-cell *matHeaderCellDef>Valid Period</th>
+        <td mat-cell *matCellDef="let coupon">{{ coupon.startDate }} - {{ coupon.expiryDate }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="codes">
+        <th mat-header-cell *matHeaderCellDef>POS / ATG</th>
+        <td mat-cell *matCellDef="let coupon">
+          {{ coupon.posCode || '-' }} / {{ coupon.atgCode || '-' }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="created">
+        <th mat-header-cell *matHeaderCellDef>Created</th>
+        <td mat-cell *matCellDef="let coupon">{{ coupon.createdAt | date:'short' }}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <mat-paginator
+      [length]="totalElements"
+      [pageSize]="pageSize"
+      [pageIndex]="pageIndex"
+      [pageSizeOptions]="[10, 20, 50, 100]"
+      (page)="onPageChange($event)"
+      showFirstLastButtons>
+    </mat-paginator>
+
+    <div *ngIf="coupons.length === 0" style="text-align: center; padding: 40px; color: #666;">
+      No coupons found matching your criteria.
+    </div>
+  </div>
+</div>

@@ -1,0 +1,30 @@
+<h2 mat-dialog-title>{{ isEdit ? 'Edit Campaign' : 'New Campaign' }}</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form" class="form-container">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Campaign Name</mat-label>
+      <input matInput formControlName="name" placeholder="Enter campaign name">
+      <mat-error *ngIf="form.get('name')?.hasError('required')">Name is required</mat-error>
+      <mat-error *ngIf="form.get('name')?.hasError('maxlength')">Max 255 characters</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Description (Optional)</mat-label>
+      <textarea matInput formControlName="description" rows="3" placeholder="Enter description"></textarea>
+      <mat-error *ngIf="form.get('description')?.hasError('maxlength')">Max 2000 characters</mat-error>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button 
+    mat-raised-button 
+    color="primary" 
+    (click)="save()" 
+    [disabled]="form.invalid || loading">
+    <mat-spinner diameter="20" *ngIf="loading"></mat-spinner>
+    <span *ngIf="!loading">{{ isEdit ? 'Update' : 'Create' }}</span>
+  </button>
+</mat-dialog-actions>

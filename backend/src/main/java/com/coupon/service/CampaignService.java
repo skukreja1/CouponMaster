@@ -1,0 +1,115 @@
+package com.coupon.service;
+
+import com.coupon.dto.CampaignDTO;
+import com.coupon.entity.Campaign;
+import com.coupon.repository.CampaignRepository;
+import com.coupon.repository.CouponBatchRepository;
+import com.coupon.repository.CouponRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+@RequiredArgsConstructor
+@Slf4j
+public class CampaignService {
+
+    private final CampaignRepository campaignRepository;
+    private final CouponBatchRepository batchRepository;
+    private final CouponRepository couponRepository;
+
+    @Transactional(readOnly = true)
+    public List<CampaignDTO> getAllCampaigns() {
+        return campaignRepository.findAllByOrderByCreatedAtDesc()
+                .stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<CampaignDTO> getActiveCampaigns() {
+        return campaignRepository.findAllActiveCampaigns()
+                .stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public CampaignDTO getCampaignById(Long id) {
+        Campaign campaign = campaignRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Campaign not found with id: " + id));
+        return toDTO(campaign);
+    }
+
+    @Transactional
+    public CampaignDTO createCampaign(CampaignDTO dto) {
+        if (campaignRepository.existsByName(dto.getName())) {
+            throw new RuntimeException("Campaign with name '" + dto.getName() + "' already exists");
+        }
+
+        Campaign campaign = Campaign.builder()
+                .name(dto.getName())
+                .description(dto.getDescription())
+                .active(true)
+                .build();
+
+        Campaign saved = campaignRepository.save(campaign);
+        log.info("Created campaign: {} with id: {}", saved.getName(), saved.getId());
+        return toDTO(saved);
+    }
+
+    @Transactional
+    public CampaignDTO updateCampaign(Long id, CampaignDTO dto) {
+        Campaign campaign = campaignRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Campaign not found with id: " + id));
+
+        if (!campaign.getName().equals(dto.getName()) && campaignRepository.existsByName(dto.getName())) {
+            throw new RuntimeException("Campaign with name '" + dto.getName() + "' already exists");
+        }
+
+        campaign.setName(dto.getName());
+        campaign.setDescription(dto.getDescription());
+
+        Campaign saved = campaignRepository.save(campaign);
+        log.info("Updated campaign: {} with id: {}", saved.getName(), saved.getId());
+        return toDTO(saved);
+    }
+
+    @Transactional
+    public void deleteCampaign(Long id) {
+        Campaign campaign = campaignRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Campaign not found with id: " + id));
+        campaign.setActive(false);
+        campaignRepository.save(campaign);
+        log.info("Soft deleted campaign with id: {}", id);
+    }
+
+    @Transactional
+    public void reactivateCampaign(Long id) {
+        Campaign campaign = campaignRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Campaign not found with id: " + id));
+        campaign.setActive(true);
+        campaignRepository.save(campaign);
+        log.info("Reactivated campaign with id: {}", id);
+    }
+
+    private CampaignDTO toDTO(Campaign campaign) {
+        int batchCount = batchRepository.findByCampaignIdOrderByCreatedAtDesc(campaign.getId()).size();
+        Long totalCoupons = couponRepository.countByCampaignId(campaign.getId());
+
+        return CampaignDTO.builder()
+                .id(campaign.getId())
+                .name(campaign.getName())
+                .description(campaign.getDescription())
+                .createdAt(campaign.getCreatedAt())
+                .updatedAt(campaign.getUpdatedAt())
+                .active(campaign.getActive())
+                .batchCount(batchCount)
+                .totalCoupons(totalCoupons)
+                .build();
+    }
+}

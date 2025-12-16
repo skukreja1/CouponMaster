@@ -1,0 +1,80 @@
+<div class="container">
+  <h1 class="page-title">Dashboard</h1>
+
+  <div *ngIf="loading" class="loading-spinner">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <div *ngIf="!loading">
+    <div class="card-grid">
+      <mat-card class="stat-card">
+        <div class="stat-value">{{ totalCampaigns }}</div>
+        <div class="stat-label">Total Campaigns</div>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <div class="stat-value">{{ totalBatches }}</div>
+        <div class="stat-label">Total Batches</div>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <div class="stat-value">{{ totalCoupons | number }}</div>
+        <div class="stat-label">Total Coupons</div>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <div class="stat-value">{{ activeCoupons | number }}</div>
+        <div class="stat-label">Active Coupons</div>
+      </mat-card>
+    </div>
+
+    <div class="button-row" style="margin-top: 20px;">
+      <button mat-raised-button color="primary" (click)="exportAll()">
+        <mat-icon>download</mat-icon>
+        Export All Coupons (CSV)
+      </button>
+    </div>
+
+    <h2 style="margin-top: 40px;">Recent Batches</h2>
+    <div class="table-container">
+      <table mat-table [dataSource]="batches.slice(0, 5)">
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef>ID</th>
+          <td mat-cell *matCellDef="let batch">{{ batch.id }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="campaign">
+          <th mat-header-cell *matHeaderCellDef>Campaign</th>
+          <td mat-cell *matCellDef="let batch">{{ batch.campaignName }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="prefix">
+          <th mat-header-cell *matHeaderCellDef>Prefix</th>
+          <td mat-cell *matCellDef="let batch">{{ batch.prefix }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="count">
+          <th mat-header-cell *matHeaderCellDef>Coupons</th>
+          <td mat-cell *matCellDef="let batch">{{ batch.couponCount | number }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="dates">
+          <th mat-header-cell *matHeaderCellDef>Valid Period</th>
+          <td mat-cell *matCellDef="let batch">{{ batch.startDate }} - {{ batch.expiryDate }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>Status</th>
+          <td mat-cell *matCellDef="let batch">
+            <span [class]="batch.active ? 'status-active' : 'status-inactive'">
+              {{ batch.active ? 'Active' : 'Inactive' }}
+            </span>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="['id', 'campaign', 'prefix', 'count', 'dates', 'status']"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['id', 'campaign', 'prefix', 'count', 'dates', 'status'];"></tr>
+      </table>
+    </div>
+  </div>
+</div>

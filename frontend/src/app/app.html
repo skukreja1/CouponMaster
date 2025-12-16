@@ -1,0 +1,14 @@
+<mat-toolbar color="primary" *ngIf="authService.isLoggedIn()">
+  <span>Coupon Management System</span>
+  <span class="spacer"></span>
+  <button mat-button routerLink="/dashboard">Dashboard</button>
+  <button mat-button routerLink="/campaigns">Campaigns</button>
+  <button mat-button routerLink="/batches">Batches</button>
+  <button mat-button routerLink="/coupons">Coupons</button>
+  <button mat-button (click)="logout()">
+    <mat-icon>logout</mat-icon>
+    Logout
+  </button>
+</mat-toolbar>
+
+<router-outlet></router-outlet>
