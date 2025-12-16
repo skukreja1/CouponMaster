@@ -34,14 +34,16 @@
 
     <div class="form-row">
       <mat-form-field appearance="outline">
-        <mat-label>POS Code (Optional)</mat-label>
+        <mat-label>POS Code</mat-label>
         <input matInput formControlName="posCode" placeholder="Enter POS code">
+        <mat-error *ngIf="form.get('posCode')?.hasError('required')">POS Code is required</mat-error>
         <mat-error *ngIf="form.get('posCode')?.hasError('maxlength')">Max 50 characters</mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline">
-        <mat-label>ATG Code (Optional)</mat-label>
+        <mat-label>ATG Code</mat-label>
         <input matInput formControlName="atgCode" placeholder="Enter ATG code">
+        <mat-error *ngIf="form.get('atgCode')?.hasError('required')">ATG Code is required</mat-error>
         <mat-error *ngIf="form.get('atgCode')?.hasError('maxlength')">Max 50 characters</mat-error>
       </mat-form-field>
     </div>
