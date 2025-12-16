@@ -84,6 +84,25 @@ This design ensures consistency across all coupons within a campaign and simplif
 ### Coupons (Admin)
 - `GET /api/coupons/search` - Search coupons with filters
 
+### Coupon Lookup (Public - No Auth)
+- `GET /api/public/coupon/{code}` - Get coupon details by code
+- `POST /api/public/coupon/lookup` - Get coupon details (body: `{"code": "COUPONCODE"}`)
+
+**Response:**
+```json
+{
+  "couponCode": "FFTESTZU3H1SWD",
+  "posCode": "C1234",
+  "atgCode": "A1234",
+  "status": "ACTIVE",
+  "usageCount": 0,
+  "maxUsages": 1,
+  "campaignName": "$5 off $50",
+  "startDate": "2025-12-16",
+  "expiryDate": "2026-12-16"
+}
+```
+
 ### Redemption (Public - No Auth)
 - `POST /api/public/redeem` - Validate and redeem coupon
 
