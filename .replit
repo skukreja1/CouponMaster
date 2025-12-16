@@ -1,4 +1,4 @@
-modules = ["java-graalvm22.3", "nodejs-22"]
+modules = ["java-graalvm22.3", "nodejs-22", "postgresql-16"]
 [agent]
 expertMode = true
 
@@ -54,3 +54,6 @@ externalPort = 8080
 deploymentTarget = "autoscale"
 run = ["java", "-Dserver.port=5000", "-jar", "/home/runner/workspace/backend/target/coupon-system-1.0.0.jar"]
 build = ["bash", "-c", "cd /home/runner/workspace/frontend && npm install && npm run build && mkdir -p /home/runner/workspace/backend/src/main/resources/static && cp -r dist/frontend/browser/* /home/runner/workspace/backend/src/main/resources/static/ && cd /home/runner/workspace/backend && mvn clean package -DskipTests"]
+
+[nix]
+channel = "stable-25_05"

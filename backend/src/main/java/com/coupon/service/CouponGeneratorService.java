@@ -37,8 +37,8 @@ public class CouponGeneratorService {
         int totalGenerated = 0;
         int batchNumber = 0;
         
-        String insertSql = "INSERT INTO coupon (batch_id, code, status, usage_count, created_at, updated_at) " +
-                     "VALUES (?, ?, 'ACTIVE', 0, ?, ?) ON CONFLICT (code) DO NOTHING";
+        String insertSql = "INSERT INTO coupon (id, batch_id, code, status, usage_count, created_at, updated_at) " +
+                     "VALUES (nextval('coupon_seq'), ?, ?, 'ACTIVE', 0, ?, ?) ON CONFLICT (code) DO NOTHING";
         
         while (totalGenerated < count) {
             int remaining = count - totalGenerated;
