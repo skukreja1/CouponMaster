@@ -42,20 +42,8 @@
       </ng-container>
 
       <ng-container matColumnDef="count">
-        <th mat-header-cell *matHeaderCellDef>Total</th>
+        <th mat-header-cell *matHeaderCellDef>Total Coupons</th>
         <td mat-cell *matCellDef="let batch">{{ batch.couponCount | number }}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="codes">
-        <th mat-header-cell *matHeaderCellDef>POS / ATG</th>
-        <td mat-cell *matCellDef="let batch">
-          {{ batch.posCode || '-' }} / {{ batch.atgCode || '-' }}
-        </td>
-      </ng-container>
-
-      <ng-container matColumnDef="dates">
-        <th mat-header-cell *matHeaderCellDef>Valid Period</th>
-        <td mat-cell *matCellDef="let batch">{{ batch.startDate }} - {{ batch.expiryDate }}</td>
       </ng-container>
 
       <ng-container matColumnDef="usages">

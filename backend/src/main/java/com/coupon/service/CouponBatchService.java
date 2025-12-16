@@ -14,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -56,8 +55,6 @@ public class CouponBatchService {
 
     @Transactional
     public CouponBatchDTO createBatch(CouponBatchDTO dto) {
-        validateDates(dto.getStartDate(), dto.getExpiryDate());
-
         Campaign campaign = campaignRepository.findById(dto.getCampaignId())
                 .orElseThrow(() -> new RuntimeException("Campaign not found with id: " + dto.getCampaignId()));
 
@@ -70,10 +67,6 @@ public class CouponBatchService {
                 .campaign(campaign)
                 .prefix(prefix)
                 .couponCount(dto.getCouponCount())
-                .posCode(dto.getPosCode())
-                .atgCode(dto.getAtgCode())
-                .startDate(dto.getStartDate())
-                .expiryDate(dto.getExpiryDate())
                 .maxUsages(dto.getMaxUsages())
                 .active(true)
                 .build();
@@ -93,26 +86,6 @@ public class CouponBatchService {
         CouponBatch batch = batchRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Batch not found with id: " + id));
 
-        if (dto.getStartDate() != null && dto.getExpiryDate() != null) {
-            validateDates(dto.getStartDate(), dto.getExpiryDate());
-        } else if (dto.getStartDate() != null) {
-            validateDates(dto.getStartDate(), batch.getExpiryDate());
-        } else if (dto.getExpiryDate() != null) {
-            validateDates(batch.getStartDate(), dto.getExpiryDate());
-        }
-
-        if (dto.getPosCode() != null) {
-            batch.setPosCode(dto.getPosCode());
-        }
-        if (dto.getAtgCode() != null) {
-            batch.setAtgCode(dto.getAtgCode());
-        }
-        if (dto.getStartDate() != null) {
-            batch.setStartDate(dto.getStartDate());
-        }
-        if (dto.getExpiryDate() != null) {
-            batch.setExpiryDate(dto.getExpiryDate());
-        }
         if (dto.getMaxUsages() != null) {
             batch.setMaxUsages(dto.getMaxUsages());
         }
@@ -144,19 +117,6 @@ public class CouponBatchService {
         log.info("Reactivated batch {} and set all coupons to ACTIVE", id);
     }
 
-    private void validateDates(LocalDate startDate, LocalDate expiryDate) {
-        LocalDate today = LocalDate.now();
-        if (startDate.isBefore(today)) {
-            throw new RuntimeException("Start date must be today or in the future");
-        }
-        if (expiryDate.isBefore(today)) {
-            throw new RuntimeException("Expiry date must be today or in the future");
-        }
-        if (expiryDate.isBefore(startDate)) {
-            throw new RuntimeException("Expiry date must be on or after start date");
-        }
-    }
-
     private CouponBatchDTO toDTO(CouponBatch batch) {
         Long activeCoupons = batchRepository.countActiveCouponsByBatchId(batch.getId());
         Long usedCoupons = batchRepository.countUsedCouponsByBatchId(batch.getId());
@@ -171,10 +131,6 @@ public class CouponBatchService {
                 .prefix(batch.getPrefix())
                 .userPrefix(userPrefix)
                 .couponCount(batch.getCouponCount())
-                .posCode(batch.getPosCode())
-                .atgCode(batch.getAtgCode())
-                .startDate(batch.getStartDate())
-                .expiryDate(batch.getExpiryDate())
                 .maxUsages(batch.getMaxUsages())
                 .createdAt(batch.getCreatedAt())
                 .updatedAt(batch.getUpdatedAt())

@@ -13,7 +13,6 @@ export class BatchDialogComponent {
   form: FormGroup;
   campaigns: Campaign[];
   loading = false;
-  minDate = new Date();
 
   constructor(
     private fb: FormBuilder,
@@ -28,16 +27,8 @@ export class BatchDialogComponent {
       campaignId: ['', Validators.required],
       userPrefix: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(4), Validators.pattern(/^[A-Z0-9]{4}$/)]],
       couponCount: [1000, [Validators.required, Validators.min(1), Validators.max(3000000)]],
-      posCode: ['', Validators.maxLength(50)],
-      atgCode: ['', Validators.maxLength(50)],
-      startDate: ['', Validators.required],
-      expiryDate: ['', Validators.required],
       maxUsages: [1, [Validators.required, Validators.min(1)]]
     });
-  }
-
-  formatDate(date: Date): string {
-    return date.toISOString().split('T')[0];
   }
 
   save(): void {
@@ -50,10 +41,6 @@ export class BatchDialogComponent {
       campaignId: formValue.campaignId,
       userPrefix: formValue.userPrefix.toUpperCase(),
       couponCount: formValue.couponCount,
-      posCode: formValue.posCode || null,
-      atgCode: formValue.atgCode || null,
-      startDate: this.formatDate(formValue.startDate),
-      expiryDate: this.formatDate(formValue.expiryDate),
       maxUsages: formValue.maxUsages
     };
 

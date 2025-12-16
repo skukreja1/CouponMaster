@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,9 +52,15 @@ public class CampaignService {
             throw new RuntimeException("Campaign with name '" + dto.getName() + "' already exists");
         }
 
+        validateDates(dto.getStartDate(), dto.getExpiryDate());
+
         Campaign campaign = Campaign.builder()
                 .name(dto.getName())
                 .description(dto.getDescription())
+                .posCode(dto.getPosCode())
+                .atgCode(dto.getAtgCode())
+                .startDate(dto.getStartDate())
+                .expiryDate(dto.getExpiryDate())
                 .active(true)
                 .build();
 
@@ -71,8 +78,14 @@ public class CampaignService {
             throw new RuntimeException("Campaign with name '" + dto.getName() + "' already exists");
         }
 
+        validateDates(dto.getStartDate(), dto.getExpiryDate());
+
         campaign.setName(dto.getName());
         campaign.setDescription(dto.getDescription());
+        campaign.setPosCode(dto.getPosCode());
+        campaign.setAtgCode(dto.getAtgCode());
+        campaign.setStartDate(dto.getStartDate());
+        campaign.setExpiryDate(dto.getExpiryDate());
 
         Campaign saved = campaignRepository.save(campaign);
         log.info("Updated campaign: {} with id: {}", saved.getName(), saved.getId());
@@ -97,6 +110,12 @@ public class CampaignService {
         log.info("Reactivated campaign with id: {}", id);
     }
 
+    private void validateDates(LocalDate startDate, LocalDate expiryDate) {
+        if (expiryDate.isBefore(startDate)) {
+            throw new RuntimeException("Expiry date must be on or after start date");
+        }
+    }
+
     private CampaignDTO toDTO(Campaign campaign) {
         int batchCount = batchRepository.findByCampaignIdOrderByCreatedAtDesc(campaign.getId()).size();
         Long totalCoupons = couponRepository.countByCampaignId(campaign.getId());
@@ -105,6 +124,10 @@ public class CampaignService {
                 .id(campaign.getId())
                 .name(campaign.getName())
                 .description(campaign.getDescription())
+                .posCode(campaign.getPosCode())
+                .atgCode(campaign.getAtgCode())
+                .startDate(campaign.getStartDate())
+                .expiryDate(campaign.getExpiryDate())
                 .createdAt(campaign.getCreatedAt())
                 .updatedAt(campaign.getUpdatedAt())
                 .active(campaign.getActive())

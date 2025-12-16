@@ -16,7 +16,7 @@ export class BatchesComponent implements OnInit {
   campaigns: Campaign[] = [];
   loading = true;
   selectedCampaignId: number | null = null;
-  displayedColumns = ['id', 'campaign', 'prefix', 'count', 'codes', 'dates', 'usages', 'status', 'actions'];
+  displayedColumns = ['id', 'campaign', 'prefix', 'count', 'usages', 'status', 'actions'];
 
   constructor(
     private apiService: ApiService,
@@ -59,7 +59,7 @@ export class BatchesComponent implements OnInit {
 
   openCreateDialog(): void {
     const dialogRef = this.dialog.open(BatchDialogComponent, {
-      width: '600px',
+      width: '500px',
       data: { campaigns: this.campaigns }
     });
 
@@ -72,7 +72,7 @@ export class BatchesComponent implements OnInit {
 
   openEditDialog(batch: CouponBatch): void {
     const dialogRef = this.dialog.open(BatchEditDialogComponent, {
-      width: '500px',
+      width: '400px',
       data: batch
     });
 

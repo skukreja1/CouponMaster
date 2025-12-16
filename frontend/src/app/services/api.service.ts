@@ -7,6 +7,10 @@ export interface Campaign {
   id?: number;
   name: string;
   description?: string;
+  posCode?: string;
+  atgCode?: string;
+  startDate: string;
+  expiryDate: string;
   createdAt?: string;
   updatedAt?: string;
   active?: boolean;
@@ -21,10 +25,6 @@ export interface CouponBatch {
   userPrefix: string;
   prefix?: string;
   couponCount: number;
-  posCode?: string;
-  atgCode?: string;
-  startDate: string;
-  expiryDate: string;
   maxUsages: number;
   createdAt?: string;
   updatedAt?: string;
@@ -35,10 +35,6 @@ export interface CouponBatch {
 }
 
 export interface BatchUpdate {
-  posCode?: string;
-  atgCode?: string;
-  startDate?: string;
-  expiryDate?: string;
   maxUsages?: number;
 }
 

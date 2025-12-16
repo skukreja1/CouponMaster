@@ -32,7 +32,7 @@ public interface CouponRepository extends JpaRepository<Coupon, Long>, JpaSpecif
 
     @Modifying
     @Query("UPDATE Coupon c SET c.status = 'EXPIRED', c.updatedAt = CURRENT_TIMESTAMP " +
-           "WHERE c.batch.id IN (SELECT b.id FROM CouponBatch b WHERE b.expiryDate < :today) " +
+           "WHERE c.batch.id IN (SELECT b.id FROM CouponBatch b WHERE b.campaign.expiryDate < :today) " +
            "AND c.status = 'ACTIVE'")
     int expireCoupons(@Param("today") LocalDate today);
 

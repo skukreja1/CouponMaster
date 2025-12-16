@@ -13,7 +13,7 @@ import { CampaignDialogComponent } from './campaign-dialog.component';
 export class CampaignsComponent implements OnInit {
   campaigns: Campaign[] = [];
   loading = true;
-  displayedColumns = ['id', 'name', 'description', 'batches', 'coupons', 'status', 'actions'];
+  displayedColumns = ['id', 'name', 'posCode', 'atgCode', 'dates', 'batches', 'coupons', 'status', 'actions'];
 
   constructor(
     private apiService: ApiService,
@@ -41,7 +41,7 @@ export class CampaignsComponent implements OnInit {
 
   openDialog(campaign?: Campaign): void {
     const dialogRef = this.dialog.open(CampaignDialogComponent, {
-      width: '500px',
+      width: '600px',
       data: campaign ? { ...campaign } : null
     });
 

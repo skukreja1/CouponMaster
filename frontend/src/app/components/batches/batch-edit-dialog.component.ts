@@ -12,7 +12,6 @@ import { ApiService, CouponBatch, BatchUpdate } from '../../services/api.service
 export class BatchEditDialogComponent {
   form: FormGroup;
   loading = false;
-  minDate = new Date();
 
   constructor(
     private fb: FormBuilder,
@@ -22,17 +21,8 @@ export class BatchEditDialogComponent {
     @Inject(MAT_DIALOG_DATA) public data: CouponBatch
   ) {
     this.form = this.fb.group({
-      posCode: [data.posCode || '', Validators.maxLength(50)],
-      atgCode: [data.atgCode || '', Validators.maxLength(50)],
-      startDate: [data.startDate ? new Date(data.startDate) : null],
-      expiryDate: [data.expiryDate ? new Date(data.expiryDate) : null],
       maxUsages: [data.maxUsages, [Validators.required, Validators.min(1)]]
     });
-  }
-
-  formatDate(date: Date | null): string | undefined {
-    if (!date) return undefined;
-    return date.toISOString().split('T')[0];
   }
 
   save(): void {
@@ -42,10 +32,6 @@ export class BatchEditDialogComponent {
     const formValue = this.form.value;
     
     const update: BatchUpdate = {
-      posCode: formValue.posCode || undefined,
-      atgCode: formValue.atgCode || undefined,
-      startDate: formValue.startDate ? this.formatDate(formValue.startDate) : undefined,
-      expiryDate: formValue.expiryDate ? this.formatDate(formValue.expiryDate) : undefined,
       maxUsages: formValue.maxUsages
     };
 

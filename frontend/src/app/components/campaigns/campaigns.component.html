@@ -23,9 +23,19 @@
         <td mat-cell *matCellDef="let campaign">{{ campaign.name }}</td>
       </ng-container>
 
-      <ng-container matColumnDef="description">
-        <th mat-header-cell *matHeaderCellDef>Description</th>
-        <td mat-cell *matCellDef="let campaign">{{ campaign.description || '-' }}</td>
+      <ng-container matColumnDef="posCode">
+        <th mat-header-cell *matHeaderCellDef>POS Code</th>
+        <td mat-cell *matCellDef="let campaign">{{ campaign.posCode || '-' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="atgCode">
+        <th mat-header-cell *matHeaderCellDef>ATG Code</th>
+        <td mat-cell *matCellDef="let campaign">{{ campaign.atgCode || '-' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="dates">
+        <th mat-header-cell *matHeaderCellDef>Validity Period</th>
+        <td mat-cell *matCellDef="let campaign">{{ campaign.startDate }} to {{ campaign.expiryDate }}</td>
       </ng-container>
 
       <ng-container matColumnDef="batches">

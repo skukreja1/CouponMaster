@@ -14,6 +14,38 @@
       <textarea matInput formControlName="description" rows="3" placeholder="Enter description"></textarea>
       <mat-error *ngIf="form.get('description')?.hasError('maxlength')">Max 2000 characters</mat-error>
     </mat-form-field>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>POS Code (Optional)</mat-label>
+        <input matInput formControlName="posCode" placeholder="Enter POS code">
+        <mat-error *ngIf="form.get('posCode')?.hasError('maxlength')">Max 50 characters</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>ATG Code (Optional)</mat-label>
+        <input matInput formControlName="atgCode" placeholder="Enter ATG code">
+        <mat-error *ngIf="form.get('atgCode')?.hasError('maxlength')">Max 50 characters</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Start Date</mat-label>
+        <input matInput [matDatepicker]="startPicker" formControlName="startDate" [min]="minDate">
+        <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+        <mat-datepicker #startPicker></mat-datepicker>
+        <mat-error *ngIf="form.get('startDate')?.hasError('required')">Start date is required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Expiry Date</mat-label>
+        <input matInput [matDatepicker]="expiryPicker" formControlName="expiryDate" [min]="minDate">
+        <mat-datepicker-toggle matSuffix [for]="expiryPicker"></mat-datepicker-toggle>
+        <mat-datepicker #expiryPicker></mat-datepicker>
+        <mat-error *ngIf="form.get('expiryDate')?.hasError('required')">Expiry date is required</mat-error>
+      </mat-form-field>
+    </div>
   </form>
 </mat-dialog-content>
 

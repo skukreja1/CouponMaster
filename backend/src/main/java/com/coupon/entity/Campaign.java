@@ -2,6 +2,7 @@ package com.coupon.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,18 @@ public class Campaign {
 
     @Column(length = 2000)
     private String description;
+
+    @Column(name = "pos_code", length = 50)
+    private String posCode;
+
+    @Column(name = "atg_code", length = 50)
+    private String atgCode;
+
+    @Column(name = "start_date", nullable = false)
+    private LocalDate startDate;
+
+    @Column(name = "expiry_date", nullable = false)
+    private LocalDate expiryDate;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;

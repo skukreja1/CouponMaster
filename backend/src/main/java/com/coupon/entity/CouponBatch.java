@@ -2,7 +2,6 @@ package com.coupon.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -28,18 +27,6 @@ public class CouponBatch {
 
     @Column(name = "coupon_count", nullable = false)
     private Integer couponCount;
-
-    @Column(name = "pos_code", length = 50)
-    private String posCode;
-
-    @Column(name = "atg_code", length = 50)
-    private String atgCode;
-
-    @Column(name = "start_date", nullable = false)
-    private LocalDate startDate;
-
-    @Column(name = "expiry_date", nullable = false)
-    private LocalDate expiryDate;
 
     @Column(name = "max_usages", nullable = false)
     @Builder.Default

@@ -1,6 +1,7 @@
 package com.coupon.service;
 
 import com.coupon.dto.RedemptionResponseDTO;
+import com.coupon.entity.Campaign;
 import com.coupon.entity.Coupon;
 import com.coupon.entity.CouponBatch;
 import com.coupon.entity.CouponStatus;
@@ -35,12 +36,22 @@ public class RedemptionService {
 
         Coupon coupon = couponOpt.get();
         CouponBatch batch = coupon.getBatch();
+        Campaign campaign = batch.getCampaign();
 
         if (!batch.getActive()) {
             log.warn("Redemption attempt for inactive batch coupon: {}", code);
             return RedemptionResponseDTO.builder()
                     .success(false)
                     .message("This coupon batch has been deactivated")
+                    .code(code)
+                    .build();
+        }
+
+        if (!campaign.getActive()) {
+            log.warn("Redemption attempt for inactive campaign coupon: {}", code);
+            return RedemptionResponseDTO.builder()
+                    .success(false)
+                    .message("This campaign has been deactivated")
                     .code(code)
                     .build();
         }
@@ -76,16 +87,16 @@ public class RedemptionService {
         }
 
         LocalDate today = LocalDate.now();
-        if (today.isBefore(batch.getStartDate())) {
+        if (today.isBefore(campaign.getStartDate())) {
             log.warn("Redemption attempt for coupon not yet valid: {}", code);
             return RedemptionResponseDTO.builder()
                     .success(false)
-                    .message("Coupon is not yet valid. Valid from: " + batch.getStartDate())
+                    .message("Coupon is not yet valid. Valid from: " + campaign.getStartDate())
                     .code(code)
                     .build();
         }
 
-        if (today.isAfter(batch.getExpiryDate())) {
+        if (today.isAfter(campaign.getExpiryDate())) {
             coupon.setStatus(CouponStatus.EXPIRED);
             couponRepository.save(coupon);
             log.warn("Redemption attempt for date-expired coupon: {}", code);

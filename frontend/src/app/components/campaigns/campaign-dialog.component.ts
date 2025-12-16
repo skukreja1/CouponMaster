@@ -13,6 +13,7 @@ export class CampaignDialogComponent {
   form: FormGroup;
   isEdit: boolean;
   loading = false;
+  minDate = new Date();
 
   constructor(
     private fb: FormBuilder,
@@ -24,15 +25,32 @@ export class CampaignDialogComponent {
     this.isEdit = !!data;
     this.form = this.fb.group({
       name: [data?.name || '', [Validators.required, Validators.maxLength(255)]],
-      description: [data?.description || '', Validators.maxLength(2000)]
+      description: [data?.description || '', Validators.maxLength(2000)],
+      posCode: [data?.posCode || '', Validators.maxLength(50)],
+      atgCode: [data?.atgCode || '', Validators.maxLength(50)],
+      startDate: [data?.startDate ? new Date(data.startDate) : '', Validators.required],
+      expiryDate: [data?.expiryDate ? new Date(data.expiryDate) : '', Validators.required]
     });
+  }
+
+  formatDate(date: Date): string {
+    return date.toISOString().split('T')[0];
   }
 
   save(): void {
     if (this.form.invalid) return;
 
     this.loading = true;
-    const campaign: Campaign = this.form.value;
+    const formValue = this.form.value;
+
+    const campaign: Campaign = {
+      name: formValue.name,
+      description: formValue.description || null,
+      posCode: formValue.posCode || null,
+      atgCode: formValue.atgCode || null,
+      startDate: this.formatDate(formValue.startDate),
+      expiryDate: this.formatDate(formValue.expiryDate)
+    };
 
     const request = this.isEdit
       ? this.apiService.updateCampaign(this.data!.id!, campaign)

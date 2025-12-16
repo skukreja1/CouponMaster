@@ -1,6 +1,8 @@
 package com.coupon.service;
 
+import com.coupon.entity.Campaign;
 import com.coupon.entity.Coupon;
+import com.coupon.entity.CouponBatch;
 import com.coupon.repository.CouponBatchRepository;
 import com.coupon.repository.CouponRepository;
 import jakarta.servlet.http.HttpServletResponse;
@@ -75,17 +77,19 @@ public class ExportService {
     }
 
     private String formatCouponCSV(Coupon coupon) {
+        CouponBatch batch = coupon.getBatch();
+        Campaign campaign = batch.getCampaign();
         return String.join(",",
                 escapeCSV(coupon.getCode()),
                 escapeCSV(coupon.getStatus().name()),
                 String.valueOf(coupon.getUsageCount()),
-                String.valueOf(coupon.getBatch().getMaxUsages()),
-                escapeCSV(coupon.getBatch().getStartDate().toString()),
-                escapeCSV(coupon.getBatch().getExpiryDate().toString()),
-                escapeCSV(coupon.getBatch().getCampaign().getName()),
-                String.valueOf(coupon.getBatch().getId()),
-                escapeCSV(coupon.getBatch().getPosCode() != null ? coupon.getBatch().getPosCode() : ""),
-                escapeCSV(coupon.getBatch().getAtgCode() != null ? coupon.getBatch().getAtgCode() : ""),
+                String.valueOf(batch.getMaxUsages()),
+                escapeCSV(campaign.getStartDate().toString()),
+                escapeCSV(campaign.getExpiryDate().toString()),
+                escapeCSV(campaign.getName()),
+                String.valueOf(batch.getId()),
+                escapeCSV(campaign.getPosCode() != null ? campaign.getPosCode() : ""),
+                escapeCSV(campaign.getAtgCode() != null ? campaign.getAtgCode() : ""),
                 escapeCSV(coupon.getCreatedAt().toString())
         );
     }

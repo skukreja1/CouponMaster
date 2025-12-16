@@ -2,7 +2,6 @@ package com.coupon.dto;
 
 import jakarta.validation.constraints.*;
 import lombok.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -30,20 +29,6 @@ public class CouponBatchDTO {
     @Min(value = 1, message = "Coupon count must be at least 1")
     @Max(value = 3000000, message = "Coupon count cannot exceed 3,000,000")
     private Integer couponCount;
-
-    @Size(max = 50, message = "POS code must be less than 50 characters")
-    private String posCode;
-
-    @Size(max = 50, message = "ATG code must be less than 50 characters")
-    private String atgCode;
-
-    @NotNull(message = "Start date is required")
-    @FutureOrPresent(message = "Start date must be today or in the future")
-    private LocalDate startDate;
-
-    @NotNull(message = "Expiry date is required")
-    @FutureOrPresent(message = "Expiry date must be today or in the future")
-    private LocalDate expiryDate;
 
     @NotNull(message = "Max usages is required")
     @Min(value = 1, message = "Max usages must be at least 1")

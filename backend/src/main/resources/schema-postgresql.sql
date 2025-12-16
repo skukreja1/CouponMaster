@@ -19,6 +19,10 @@ CREATE TABLE IF NOT EXISTS campaign (
     id BIGINT DEFAULT nextval('campaign_seq') PRIMARY KEY,
     name VARCHAR(255) NOT NULL UNIQUE,
     description VARCHAR(2000),
+    pos_code VARCHAR(50),
+    atg_code VARCHAR(50),
+    start_date DATE NOT NULL,
+    expiry_date DATE NOT NULL CHECK (expiry_date >= start_date),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     active BOOLEAN DEFAULT TRUE NOT NULL
@@ -29,10 +33,6 @@ CREATE TABLE IF NOT EXISTS coupon_batch (
     campaign_id BIGINT NOT NULL REFERENCES campaign(id) ON DELETE CASCADE,
     prefix VARCHAR(6) NOT NULL CHECK (prefix LIKE 'FF%' AND LENGTH(prefix) = 6),
     coupon_count INTEGER NOT NULL CHECK (coupon_count > 0 AND coupon_count <= 3000000),
-    pos_code VARCHAR(50),
-    atg_code VARCHAR(50),
-    start_date DATE NOT NULL,
-    expiry_date DATE NOT NULL CHECK (expiry_date >= start_date),
     max_usages INTEGER DEFAULT 1 NOT NULL CHECK (max_usages > 0),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
@@ -60,10 +60,10 @@ CREATE INDEX IF NOT EXISTS coupon_created_idx ON coupon(created_at);
 CREATE INDEX IF NOT EXISTS coupon_code_prefix_idx ON coupon(SUBSTRING(code, 1, 6));
 
 CREATE INDEX IF NOT EXISTS batch_campaign_idx ON coupon_batch(campaign_id);
-CREATE INDEX IF NOT EXISTS batch_dates_idx ON coupon_batch(start_date, expiry_date);
 CREATE INDEX IF NOT EXISTS batch_active_idx ON coupon_batch(active);
 
 CREATE INDEX IF NOT EXISTS campaign_active_idx ON campaign(active);
+CREATE INDEX IF NOT EXISTS campaign_dates_idx ON campaign(start_date, expiry_date);
 
 -- ============================================
 -- TRIGGER FUNCTION FOR UPDATED_AT

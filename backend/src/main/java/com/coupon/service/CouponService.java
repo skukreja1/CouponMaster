@@ -3,6 +3,7 @@ package com.coupon.service;
 import com.coupon.dto.CouponDTO;
 import com.coupon.dto.CouponSearchDTO;
 import com.coupon.dto.PagedResponseDTO;
+import com.coupon.entity.Campaign;
 import com.coupon.entity.Coupon;
 import com.coupon.entity.CouponBatch;
 import com.coupon.entity.CouponStatus;
@@ -122,6 +123,7 @@ public class CouponService {
 
     private CouponDTO toDTO(Coupon coupon) {
         CouponBatch batch = coupon.getBatch();
+        Campaign campaign = batch.getCampaign();
         return CouponDTO.builder()
                 .id(coupon.getId())
                 .batchId(batch.getId())
@@ -129,11 +131,11 @@ public class CouponService {
                 .status(coupon.getStatus())
                 .usageCount(coupon.getUsageCount())
                 .maxUsages(batch.getMaxUsages())
-                .startDate(batch.getStartDate())
-                .expiryDate(batch.getExpiryDate())
-                .campaignName(batch.getCampaign().getName())
-                .posCode(batch.getPosCode())
-                .atgCode(batch.getAtgCode())
+                .startDate(campaign.getStartDate())
+                .expiryDate(campaign.getExpiryDate())
+                .campaignName(campaign.getName())
+                .posCode(campaign.getPosCode())
+                .atgCode(campaign.getAtgCode())
                 .createdAt(coupon.getCreatedAt())
                 .updatedAt(coupon.getUpdatedAt())
                 .build();

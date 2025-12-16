@@ -1,8 +1,11 @@
 package com.coupon.dto;
 
+import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -20,6 +23,18 @@ public class CampaignDTO {
 
     @Size(max = 2000, message = "Description must be less than 2000 characters")
     private String description;
+
+    @Size(max = 50, message = "POS code must be less than 50 characters")
+    private String posCode;
+
+    @Size(max = 50, message = "ATG code must be less than 50 characters")
+    private String atgCode;
+
+    @NotNull(message = "Start date is required")
+    private LocalDate startDate;
+
+    @NotNull(message = "Expiry date is required")
+    private LocalDate expiryDate;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
