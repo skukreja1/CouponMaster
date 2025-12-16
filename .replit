@@ -53,4 +53,4 @@ externalPort = 8080
 [deployment]
 deploymentTarget = "autoscale"
 run = ["java", "-Dserver.port=5000", "-jar", "/home/runner/workspace/backend/target/coupon-system-1.0.0.jar"]
-build = ["bash", "-c", "cd /home/runner/workspace/frontend && npm run build && mkdir -p /home/runner/workspace/backend/src/main/resources/static && cp -r dist/frontend/browser/* /home/runner/workspace/backend/src/main/resources/static/ && cd /home/runner/workspace/backend && mvn clean package -DskipTests"]
+build = ["bash", "-c", "cd /home/runner/workspace/frontend && npm install && npm run build && mkdir -p /home/runner/workspace/backend/src/main/resources/static && cp -r dist/frontend/browser/* /home/runner/workspace/backend/src/main/resources/static/ && cd /home/runner/workspace/backend && mvn clean package -DskipTests"]
