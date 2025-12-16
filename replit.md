@@ -22,6 +22,21 @@ A production-grade Spring Boot + Angular coupon management system supporting bat
 Format: `FF` + 4 user-defined characters + 8 random characters (A-Z, 0-9)
 Example: `FFABCD12X45Y78Z9`
 
+## Architecture: Campaign-Level Settings
+
+**All campaign settings are managed at the Campaign level:**
+- Name & Description
+- POS Code & ATG Code
+- Start Date & Expiry Date
+- User Prefix (4 characters, stored as FFxxxx)
+- Max Usages per coupon
+
+**Batches only specify:**
+- Campaign selection (inherits all settings from campaign)
+- Number of coupons to generate
+
+This design ensures consistency across all coupons within a campaign and simplifies batch creation.
+
 ## Project Structure
 ```
 /backend
@@ -54,16 +69,15 @@ Example: `FFABCD12X45Y78Z9`
 ### Campaigns (Admin)
 - `GET /api/campaigns` - List all campaigns
 - `GET /api/campaigns/active` - List active campaigns
-- `POST /api/campaigns` - Create campaign
+- `POST /api/campaigns` - Create campaign (includes prefix, maxUsages, dates, codes)
 - `PUT /api/campaigns/{id}` - Update campaign
 - `DELETE /api/campaigns/{id}` - Deactivate campaign
 - `PUT /api/campaigns/{id}/reactivate` - Reactivate campaign
 
 ### Batches (Admin)
-- `GET /api/batches` - List all batches
+- `GET /api/batches` - List all batches (displays inherited campaign settings)
 - `GET /api/batches/campaign/{campaignId}` - Batches by campaign
-- `POST /api/batches` - Create/generate batch (up to 3M coupons)
-- `PUT /api/batches/{id}` - Update batch
+- `POST /api/batches` - Create/generate batch (only specifies campaignId and count)
 - `DELETE /api/batches/{id}` - Deactivate batch
 - `PUT /api/batches/{id}/reactivate` - Reactivate batch
 
@@ -78,10 +92,12 @@ Example: `FFABCD12X45Y78Z9`
 - `GET /api/export/all` - Export all coupons as CSV
 
 ## Key Design Decisions
-1. **Memory-safe batch generation**: JDBC batch inserts limited to 5000 rows per batch for memory efficiency
-2. **Global uniqueness**: Coupon codes checked for global uniqueness during generation
-3. **Streaming export**: CSV exports use streaming to handle large datasets
-4. **Database URL handling**: Custom DataSourceConfig converts Replit's PostgreSQL URL format to JDBC format
+1. **Campaign-level settings**: All coupon settings (prefix, maxUsages, dates, codes) are defined at campaign level
+2. **Simplified batch creation**: Batches only require campaign selection and coupon count
+3. **Memory-safe batch generation**: JDBC batch inserts limited to 5000 rows per batch
+4. **Global uniqueness**: Coupon codes checked for global uniqueness during generation
+5. **Streaming export**: CSV exports use streaming to handle large datasets
+6. **Database URL handling**: Custom DataSourceConfig converts Replit's PostgreSQL URL format to JDBC format
 
 ## Running Locally
 1. Backend: `cd backend && mvn spring-boot:run` (port 8080)
