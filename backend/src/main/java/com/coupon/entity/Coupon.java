@@ -39,6 +39,18 @@ public class Coupon {
     @Builder.Default
     private Integer usageCount = 0;
 
+    @Column(name = "transaction_number", length = 100)
+    private String transactionNumber;
+
+    @Column(name = "loyalty_id", length = 100)
+    private String loyaltyId;
+
+    @Column(name = "source", length = 20)
+    private String source;
+
+    @Column(name = "redeemed_at")
+    private LocalDateTime redeemedAt;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 

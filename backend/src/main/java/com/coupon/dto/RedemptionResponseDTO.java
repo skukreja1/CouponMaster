@@ -15,4 +15,8 @@ public class RedemptionResponseDTO {
     private Integer usageCount;
     private Integer maxUsages;
     private Integer remainingUsages;
+    private String transactionNumber;
+    private String loyaltyId;
+    private String source;
+    private String redeemedAt;
 }

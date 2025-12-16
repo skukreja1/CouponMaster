@@ -1,5 +1,6 @@
 package com.coupon.service;
 
+import com.coupon.dto.RedemptionRequestDTO;
 import com.coupon.dto.RedemptionResponseDTO;
 import com.coupon.entity.Campaign;
 import com.coupon.entity.Coupon;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -23,6 +25,14 @@ public class RedemptionService {
 
     @Transactional
     public RedemptionResponseDTO redeemCoupon(String code) {
+        RedemptionRequestDTO request = new RedemptionRequestDTO();
+        request.setCode(code);
+        return redeemCoupon(request);
+    }
+
+    @Transactional
+    public RedemptionResponseDTO redeemCoupon(RedemptionRequestDTO request) {
+        String code = request.getCode();
         Optional<Coupon> couponOpt = couponRepository.findByCodeWithBatchAndCampaign(code.toUpperCase());
 
         if (couponOpt.isEmpty()) {
@@ -110,13 +120,21 @@ public class RedemptionService {
         int newUsageCount = coupon.getUsageCount() + 1;
         coupon.setUsageCount(newUsageCount);
 
+        LocalDateTime now = LocalDateTime.now();
+        coupon.setTransactionNumber(request.getTransactionNumber());
+        coupon.setLoyaltyId(request.getLoyaltyId());
+        coupon.setSource(request.getSource());
+        coupon.setRedeemedAt(now);
+
         if (newUsageCount >= campaign.getMaxUsages()) {
             coupon.setStatus(CouponStatus.MAX_USED);
             log.info("Coupon {} has reached max usage ({}/{})", code, newUsageCount, campaign.getMaxUsages());
         }
 
         couponRepository.save(coupon);
-        log.info("Successfully redeemed coupon: {} (usage {}/{})", code, newUsageCount, campaign.getMaxUsages());
+        log.info("Successfully redeemed coupon: {} (usage {}/{}) - Transaction: {}, LoyaltyID: {}, Source: {}", 
+                code, newUsageCount, campaign.getMaxUsages(), 
+                request.getTransactionNumber(), request.getLoyaltyId(), request.getSource());
 
         return RedemptionResponseDTO.builder()
                 .success(true)
@@ -125,6 +143,10 @@ public class RedemptionService {
                 .usageCount(newUsageCount)
                 .maxUsages(campaign.getMaxUsages())
                 .remainingUsages(campaign.getMaxUsages() - newUsageCount)
+                .transactionNumber(request.getTransactionNumber())
+                .loyaltyId(request.getLoyaltyId())
+                .source(request.getSource())
+                .redeemedAt(now.toString())
                 .build();
     }
 }

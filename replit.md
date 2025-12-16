@@ -106,6 +106,32 @@ This design ensures consistency across all coupons within a campaign and simplif
 ### Redemption (Public - No Auth)
 - `POST /api/public/redeem` - Validate and redeem coupon
 
+**Request:**
+```json
+{
+  "code": "FFTESTZU3H1SWD",
+  "transactionNumber": "TXN123456",
+  "loyaltyId": "LOYALTY789",
+  "source": "POS"
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Coupon redeemed successfully",
+  "code": "FFTESTZU3H1SWD",
+  "usageCount": 1,
+  "maxUsages": 1,
+  "remainingUsages": 0,
+  "transactionNumber": "TXN123456",
+  "loyaltyId": "LOYALTY789",
+  "source": "POS",
+  "redeemedAt": "2025-12-16T18:41:23.421306792"
+}
+```
+
 ### Export (Admin)
 - `GET /api/export/batch/{id}` - Export batch as CSV
 - `GET /api/export/all` - Export all coupons as CSV

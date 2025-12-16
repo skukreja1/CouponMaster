@@ -18,7 +18,7 @@ public class RedemptionController {
 
     @PostMapping
     public ResponseEntity<RedemptionResponseDTO> redeemCoupon(@Valid @RequestBody RedemptionRequestDTO request) {
-        RedemptionResponseDTO response = redemptionService.redeemCoupon(request.getCode());
+        RedemptionResponseDTO response = redemptionService.redeemCoupon(request);
         return ResponseEntity.ok(response);
     }
 
