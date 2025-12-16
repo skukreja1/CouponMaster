@@ -25,9 +25,7 @@ export class BatchDialogComponent {
     
     this.form = this.fb.group({
       campaignId: ['', Validators.required],
-      userPrefix: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(4), Validators.pattern(/^[A-Z0-9]{4}$/)]],
-      couponCount: [1000, [Validators.required, Validators.min(1), Validators.max(3000000)]],
-      maxUsages: [1, [Validators.required, Validators.min(1)]]
+      couponCount: [1000, [Validators.required, Validators.min(1), Validators.max(3000000)]]
     });
   }
 
@@ -39,9 +37,7 @@ export class BatchDialogComponent {
     
     const batch: CouponBatch = {
       campaignId: formValue.campaignId,
-      userPrefix: formValue.userPrefix.toUpperCase(),
-      couponCount: formValue.couponCount,
-      maxUsages: formValue.maxUsages
+      couponCount: formValue.couponCount
     };
 
     this.apiService.createBatch(batch).subscribe({

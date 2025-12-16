@@ -36,7 +36,6 @@ import { BatchesComponent } from './components/batches/batches.component';
 import { CouponsComponent } from './components/coupons/coupons.component';
 import { CampaignDialogComponent } from './components/campaigns/campaign-dialog.component';
 import { BatchDialogComponent } from './components/batches/batch-dialog.component';
-import { BatchEditDialogComponent } from './components/batches/batch-edit-dialog.component';
 
 import { authInterceptor } from './interceptors/auth.interceptor';
 
@@ -49,8 +48,7 @@ import { authInterceptor } from './interceptors/auth.interceptor';
     BatchesComponent,
     CouponsComponent,
     CampaignDialogComponent,
-    BatchDialogComponent,
-    BatchEditDialogComponent
+    BatchDialogComponent
   ],
   imports: [
     BrowserModule,

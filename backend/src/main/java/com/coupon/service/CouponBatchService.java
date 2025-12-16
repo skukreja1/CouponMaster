@@ -1,6 +1,5 @@
 package com.coupon.service;
 
-import com.coupon.dto.BatchUpdateDTO;
 import com.coupon.dto.CouponBatchDTO;
 import com.coupon.entity.Campaign;
 import com.coupon.entity.CouponBatch;
@@ -27,8 +26,6 @@ public class CouponBatchService {
     private final CouponRepository couponRepository;
     private final CouponGeneratorService couponGeneratorService;
     private final EntityManager entityManager;
-
-    private static final String PREFIX_START = "FF";
 
     @Transactional(readOnly = true)
     public List<CouponBatchDTO> getAllBatches() {
@@ -58,41 +55,20 @@ public class CouponBatchService {
         Campaign campaign = campaignRepository.findById(dto.getCampaignId())
                 .orElseThrow(() -> new RuntimeException("Campaign not found with id: " + dto.getCampaignId()));
 
-        String prefix = PREFIX_START + dto.getUserPrefix().toUpperCase();
-        if (prefix.length() != 6) {
-            throw new RuntimeException("Prefix must be exactly 6 characters (FF + 4 user characters)");
-        }
-
         CouponBatch batch = CouponBatch.builder()
                 .campaign(campaign)
-                .prefix(prefix)
                 .couponCount(dto.getCouponCount())
-                .maxUsages(dto.getMaxUsages())
                 .active(true)
                 .build();
 
         CouponBatch savedBatch = batchRepository.save(batch);
         entityManager.flush();
-        log.info("Created batch {} with prefix {} for campaign {}", savedBatch.getId(), prefix, campaign.getName());
+        log.info("Created batch {} for campaign {} with prefix {}", savedBatch.getId(), campaign.getName(), campaign.getPrefix());
 
         int generated = couponGeneratorService.generateCoupons(savedBatch, dto.getCouponCount());
         log.info("Generated {} coupons for batch {}", generated, savedBatch.getId());
 
         return toDTO(savedBatch);
-    }
-
-    @Transactional
-    public CouponBatchDTO updateBatch(Long id, BatchUpdateDTO dto) {
-        CouponBatch batch = batchRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Batch not found with id: " + id));
-
-        if (dto.getMaxUsages() != null) {
-            batch.setMaxUsages(dto.getMaxUsages());
-        }
-
-        CouponBatch saved = batchRepository.save(batch);
-        log.info("Updated batch {}", id);
-        return toDTO(saved);
     }
 
     @Transactional
@@ -122,16 +98,18 @@ public class CouponBatchService {
         Long usedCoupons = batchRepository.countUsedCouponsByBatchId(batch.getId());
         Long expiredCoupons = batchRepository.countExpiredCouponsByBatchId(batch.getId());
 
-        String userPrefix = batch.getPrefix().substring(2);
+        Campaign campaign = batch.getCampaign();
+        String prefix = campaign.getPrefix() != null ? campaign.getPrefix() : "FFTEST";
+        String userPrefix = prefix.length() > 2 ? prefix.substring(2) : "";
 
         return CouponBatchDTO.builder()
                 .id(batch.getId())
-                .campaignId(batch.getCampaign().getId())
-                .campaignName(batch.getCampaign().getName())
-                .prefix(batch.getPrefix())
+                .campaignId(campaign.getId())
+                .campaignName(campaign.getName())
+                .prefix(campaign.getPrefix())
                 .userPrefix(userPrefix)
                 .couponCount(batch.getCouponCount())
-                .maxUsages(batch.getMaxUsages())
+                .maxUsages(campaign.getMaxUsages())
                 .createdAt(batch.getCreatedAt())
                 .updatedAt(batch.getUpdatedAt())
                 .active(batch.getActive())

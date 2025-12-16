@@ -9,6 +9,9 @@ export interface Campaign {
   description?: string;
   posCode?: string;
   atgCode?: string;
+  userPrefix: string;
+  prefix?: string;
+  maxUsages: number;
   startDate: string;
   expiryDate: string;
   createdAt?: string;
@@ -22,20 +25,16 @@ export interface CouponBatch {
   id?: number;
   campaignId: number;
   campaignName?: string;
-  userPrefix: string;
   prefix?: string;
+  userPrefix?: string;
   couponCount: number;
-  maxUsages: number;
+  maxUsages?: number;
   createdAt?: string;
   updatedAt?: string;
   active?: boolean;
   activeCoupons?: number;
   usedCoupons?: number;
   expiredCoupons?: number;
-}
-
-export interface BatchUpdate {
-  maxUsages?: number;
 }
 
 export interface Coupon {
@@ -126,10 +125,6 @@ export class ApiService {
 
   createBatch(batch: CouponBatch): Observable<CouponBatch> {
     return this.http.post<CouponBatch>(`${this.apiUrl}/batches`, batch);
-  }
-
-  updateBatch(id: number, update: BatchUpdate): Observable<CouponBatch> {
-    return this.http.put<CouponBatch>(`${this.apiUrl}/batches/${id}`, update);
   }
 
   deleteBatch(id: number): Observable<any> {

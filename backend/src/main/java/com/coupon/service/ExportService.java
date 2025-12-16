@@ -83,7 +83,7 @@ public class ExportService {
                 escapeCSV(coupon.getCode()),
                 escapeCSV(coupon.getStatus().name()),
                 String.valueOf(coupon.getUsageCount()),
-                String.valueOf(batch.getMaxUsages()),
+                String.valueOf(campaign.getMaxUsages()),
                 escapeCSV(campaign.getStartDate().toString()),
                 escapeCSV(campaign.getExpiryDate().toString()),
                 escapeCSV(campaign.getName()),

@@ -23,6 +23,8 @@ public class CampaignService {
     private final CouponBatchRepository batchRepository;
     private final CouponRepository couponRepository;
 
+    private static final String PREFIX_START = "FF";
+
     @Transactional(readOnly = true)
     public List<CampaignDTO> getAllCampaigns() {
         return campaignRepository.findAllByOrderByCreatedAtDesc()
@@ -54,18 +56,25 @@ public class CampaignService {
 
         validateDates(dto.getStartDate(), dto.getExpiryDate());
 
+        String prefix = PREFIX_START + dto.getUserPrefix().toUpperCase();
+        if (prefix.length() != 6) {
+            throw new RuntimeException("Prefix must be exactly 6 characters (FF + 4 user characters)");
+        }
+
         Campaign campaign = Campaign.builder()
                 .name(dto.getName())
                 .description(dto.getDescription())
                 .posCode(dto.getPosCode())
                 .atgCode(dto.getAtgCode())
+                .prefix(prefix)
+                .maxUsages(dto.getMaxUsages())
                 .startDate(dto.getStartDate())
                 .expiryDate(dto.getExpiryDate())
                 .active(true)
                 .build();
 
         Campaign saved = campaignRepository.save(campaign);
-        log.info("Created campaign: {} with id: {}", saved.getName(), saved.getId());
+        log.info("Created campaign: {} with id: {} and prefix: {}", saved.getName(), saved.getId(), prefix);
         return toDTO(saved);
     }
 
@@ -80,10 +89,17 @@ public class CampaignService {
 
         validateDates(dto.getStartDate(), dto.getExpiryDate());
 
+        String prefix = PREFIX_START + dto.getUserPrefix().toUpperCase();
+        if (prefix.length() != 6) {
+            throw new RuntimeException("Prefix must be exactly 6 characters (FF + 4 user characters)");
+        }
+
         campaign.setName(dto.getName());
         campaign.setDescription(dto.getDescription());
         campaign.setPosCode(dto.getPosCode());
         campaign.setAtgCode(dto.getAtgCode());
+        campaign.setPrefix(prefix);
+        campaign.setMaxUsages(dto.getMaxUsages());
         campaign.setStartDate(dto.getStartDate());
         campaign.setExpiryDate(dto.getExpiryDate());
 
@@ -120,12 +136,18 @@ public class CampaignService {
         int batchCount = batchRepository.findByCampaignIdOrderByCreatedAtDesc(campaign.getId()).size();
         Long totalCoupons = couponRepository.countByCampaignId(campaign.getId());
 
+        String prefix = campaign.getPrefix() != null ? campaign.getPrefix() : "FFTEST";
+        String userPrefix = prefix.length() > 2 ? prefix.substring(2) : "";
+
         return CampaignDTO.builder()
                 .id(campaign.getId())
                 .name(campaign.getName())
                 .description(campaign.getDescription())
                 .posCode(campaign.getPosCode())
                 .atgCode(campaign.getAtgCode())
+                .prefix(campaign.getPrefix())
+                .userPrefix(userPrefix)
+                .maxUsages(campaign.getMaxUsages())
                 .startDate(campaign.getStartDate())
                 .expiryDate(campaign.getExpiryDate())
                 .createdAt(campaign.getCreatedAt())

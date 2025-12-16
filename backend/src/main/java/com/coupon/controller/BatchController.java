@@ -1,6 +1,5 @@
 package com.coupon.controller;
 
-import com.coupon.dto.BatchUpdateDTO;
 import com.coupon.dto.CouponBatchDTO;
 import com.coupon.service.CouponBatchService;
 import jakarta.validation.Valid;
@@ -39,13 +38,6 @@ public class BatchController {
     public ResponseEntity<CouponBatchDTO> createBatch(@Valid @RequestBody CouponBatchDTO dto) {
         CouponBatchDTO created = batchService.createBatch(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<CouponBatchDTO> updateBatch(
-            @PathVariable Long id,
-            @Valid @RequestBody BatchUpdateDTO dto) {
-        return ResponseEntity.ok(batchService.updateBatch(id, dto));
     }
 
     @DeleteMapping("/{id}")

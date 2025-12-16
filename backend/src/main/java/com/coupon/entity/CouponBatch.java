@@ -22,15 +22,8 @@ public class CouponBatch {
     @JoinColumn(name = "campaign_id", nullable = false)
     private Campaign campaign;
 
-    @Column(nullable = false, length = 6)
-    private String prefix;
-
     @Column(name = "coupon_count", nullable = false)
     private Integer couponCount;
-
-    @Column(name = "max_usages", nullable = false)
-    @Builder.Default
-    private Integer maxUsages = 1;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;

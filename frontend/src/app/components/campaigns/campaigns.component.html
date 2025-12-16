@@ -23,6 +23,18 @@
         <td mat-cell *matCellDef="let campaign">{{ campaign.name }}</td>
       </ng-container>
 
+      <ng-container matColumnDef="prefix">
+        <th mat-header-cell *matHeaderCellDef>Prefix</th>
+        <td mat-cell *matCellDef="let campaign">
+          <strong>{{ campaign.prefix }}</strong>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="maxUsages">
+        <th mat-header-cell *matHeaderCellDef>Max Uses</th>
+        <td mat-cell *matCellDef="let campaign">{{ campaign.maxUsages }}</td>
+      </ng-container>
+
       <ng-container matColumnDef="posCode">
         <th mat-header-cell *matHeaderCellDef>POS Code</th>
         <td mat-cell *matCellDef="let campaign">{{ campaign.posCode || '-' }}</td>

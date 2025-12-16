@@ -1,9 +1,6 @@
 package com.coupon.dto;
 
-import jakarta.validation.constraints.FutureOrPresent;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -29,6 +26,17 @@ public class CampaignDTO {
 
     @Size(max = 50, message = "ATG code must be less than 50 characters")
     private String atgCode;
+
+    @NotBlank(message = "User prefix is required")
+    @Size(min = 4, max = 4, message = "User prefix must be exactly 4 characters")
+    @Pattern(regexp = "^[A-Z0-9]{4}$", message = "User prefix must contain only uppercase letters and numbers")
+    private String userPrefix;
+
+    private String prefix;
+
+    @NotNull(message = "Max usages is required")
+    @Min(value = 1, message = "Max usages must be at least 1")
+    private Integer maxUsages;
 
     @NotNull(message = "Start date is required")
     private LocalDate startDate;

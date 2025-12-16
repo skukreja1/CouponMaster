@@ -33,6 +33,13 @@ public class Campaign {
     @Column(name = "atg_code", length = 50)
     private String atgCode;
 
+    @Column(nullable = false, length = 6)
+    private String prefix;
+
+    @Column(name = "max_usages", nullable = false)
+    @Builder.Default
+    private Integer maxUsages = 1;
+
     @Column(name = "start_date", nullable = false)
     private LocalDate startDate;
 

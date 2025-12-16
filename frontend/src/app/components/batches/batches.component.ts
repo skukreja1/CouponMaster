@@ -3,7 +3,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ApiService, CouponBatch, Campaign } from '../../services/api.service';
 import { BatchDialogComponent } from './batch-dialog.component';
-import { BatchEditDialogComponent } from './batch-edit-dialog.component';
 
 @Component({
   selector: 'app-batches',
@@ -61,19 +60,6 @@ export class BatchesComponent implements OnInit {
     const dialogRef = this.dialog.open(BatchDialogComponent, {
       width: '500px',
       data: { campaigns: this.campaigns }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.loadBatches();
-      }
-    });
-  }
-
-  openEditDialog(batch: CouponBatch): void {
-    const dialogRef = this.dialog.open(BatchEditDialogComponent, {
-      width: '400px',
-      data: batch
     });
 
     dialogRef.afterClosed().subscribe(result => {

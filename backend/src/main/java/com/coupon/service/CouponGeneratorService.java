@@ -33,7 +33,7 @@ public class CouponGeneratorService {
     public int generateCoupons(CouponBatch batch, int count) {
         log.info("Starting memory-safe coupon generation for batch {} with {} coupons", batch.getId(), count);
         
-        String prefix = batch.getPrefix();
+        String prefix = batch.getCampaign().getPrefix();
         int totalGenerated = 0;
         int batchNumber = 0;
         

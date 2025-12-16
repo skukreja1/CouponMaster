@@ -81,7 +81,7 @@ public class RedemptionService {
                     .message("Coupon has reached maximum usage limit")
                     .code(code)
                     .usageCount(coupon.getUsageCount())
-                    .maxUsages(batch.getMaxUsages())
+                    .maxUsages(campaign.getMaxUsages())
                     .remainingUsages(0)
                     .build();
         }
@@ -110,21 +110,21 @@ public class RedemptionService {
         int newUsageCount = coupon.getUsageCount() + 1;
         coupon.setUsageCount(newUsageCount);
 
-        if (newUsageCount >= batch.getMaxUsages()) {
+        if (newUsageCount >= campaign.getMaxUsages()) {
             coupon.setStatus(CouponStatus.MAX_USED);
-            log.info("Coupon {} has reached max usage ({}/{})", code, newUsageCount, batch.getMaxUsages());
+            log.info("Coupon {} has reached max usage ({}/{})", code, newUsageCount, campaign.getMaxUsages());
         }
 
         couponRepository.save(coupon);
-        log.info("Successfully redeemed coupon: {} (usage {}/{})", code, newUsageCount, batch.getMaxUsages());
+        log.info("Successfully redeemed coupon: {} (usage {}/{})", code, newUsageCount, campaign.getMaxUsages());
 
         return RedemptionResponseDTO.builder()
                 .success(true)
                 .message("Coupon redeemed successfully")
                 .code(code)
                 .usageCount(newUsageCount)
-                .maxUsages(batch.getMaxUsages())
-                .remainingUsages(batch.getMaxUsages() - newUsageCount)
+                .maxUsages(campaign.getMaxUsages())
+                .remainingUsages(campaign.getMaxUsages() - newUsageCount)
                 .build();
     }
 }

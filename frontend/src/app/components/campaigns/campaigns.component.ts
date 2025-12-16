@@ -13,7 +13,7 @@ import { CampaignDialogComponent } from './campaign-dialog.component';
 export class CampaignsComponent implements OnInit {
   campaigns: Campaign[] = [];
   loading = true;
-  displayedColumns = ['id', 'name', 'posCode', 'atgCode', 'dates', 'batches', 'coupons', 'status', 'actions'];
+  displayedColumns = ['id', 'name', 'prefix', 'maxUsages', 'posCode', 'atgCode', 'dates', 'batches', 'coupons', 'status', 'actions'];
 
   constructor(
     private apiService: ApiService,

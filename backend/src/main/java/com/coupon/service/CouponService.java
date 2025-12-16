@@ -130,7 +130,7 @@ public class CouponService {
                 .code(coupon.getCode())
                 .status(coupon.getStatus())
                 .usageCount(coupon.getUsageCount())
-                .maxUsages(batch.getMaxUsages())
+                .maxUsages(campaign.getMaxUsages())
                 .startDate(campaign.getStartDate())
                 .expiryDate(campaign.getExpiryDate())
                 .campaignName(campaign.getName())

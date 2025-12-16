@@ -6,34 +6,19 @@
       <mat-label>Campaign</mat-label>
       <mat-select formControlName="campaignId">
         <mat-option *ngFor="let campaign of campaigns" [value]="campaign.id">
-          {{ campaign.name }} ({{ campaign.startDate }} - {{ campaign.expiryDate }})
+          {{ campaign.name }} (Prefix: {{ campaign.prefix }}, {{ campaign.startDate }} - {{ campaign.expiryDate }})
         </mat-option>
       </mat-select>
+      <mat-hint>Coupon prefix, max usages, and validity dates are inherited from the campaign</mat-hint>
       <mat-error *ngIf="form.get('campaignId')?.hasError('required')">Campaign is required</mat-error>
     </mat-form-field>
 
-    <div class="form-row">
-      <mat-form-field appearance="outline">
-        <mat-label>User Prefix (4 characters)</mat-label>
-        <input matInput formControlName="userPrefix" placeholder="ABCD" maxlength="4" style="text-transform: uppercase;">
-        <mat-hint>Final code: FF + prefix + 8 random chars</mat-hint>
-        <mat-error *ngIf="form.get('userPrefix')?.hasError('required')">Required</mat-error>
-        <mat-error *ngIf="form.get('userPrefix')?.hasError('pattern')">Must be 4 uppercase letters/numbers</mat-error>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Number of Coupons</mat-label>
-        <input matInput type="number" formControlName="couponCount">
-        <mat-error *ngIf="form.get('couponCount')?.hasError('min')">Min 1</mat-error>
-        <mat-error *ngIf="form.get('couponCount')?.hasError('max')">Max 3,000,000</mat-error>
-      </mat-form-field>
-    </div>
-
-    <mat-form-field appearance="outline">
-      <mat-label>Max Usages Per Coupon</mat-label>
-      <input matInput type="number" formControlName="maxUsages">
-      <mat-hint>How many times each coupon can be redeemed</mat-hint>
-      <mat-error *ngIf="form.get('maxUsages')?.hasError('min')">Min 1</mat-error>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Number of Coupons</mat-label>
+      <input matInput type="number" formControlName="couponCount">
+      <mat-hint>Up to 3 million coupons per batch</mat-hint>
+      <mat-error *ngIf="form.get('couponCount')?.hasError('min')">Min 1</mat-error>
+      <mat-error *ngIf="form.get('couponCount')?.hasError('max')">Max 3,000,000</mat-error>
     </mat-form-field>
   </form>
 </mat-dialog-content>

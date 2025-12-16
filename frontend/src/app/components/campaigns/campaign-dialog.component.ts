@@ -28,6 +28,8 @@ export class CampaignDialogComponent {
       description: [data?.description || '', Validators.maxLength(2000)],
       posCode: [data?.posCode || '', Validators.maxLength(50)],
       atgCode: [data?.atgCode || '', Validators.maxLength(50)],
+      userPrefix: [data?.userPrefix || '', [Validators.required, Validators.minLength(4), Validators.maxLength(4), Validators.pattern(/^[A-Z0-9]{4}$/)]],
+      maxUsages: [data?.maxUsages || 1, [Validators.required, Validators.min(1)]],
       startDate: [data?.startDate ? new Date(data.startDate) : '', Validators.required],
       expiryDate: [data?.expiryDate ? new Date(data.expiryDate) : '', Validators.required]
     });
@@ -48,6 +50,8 @@ export class CampaignDialogComponent {
       description: formValue.description || null,
       posCode: formValue.posCode || null,
       atgCode: formValue.atgCode || null,
+      userPrefix: formValue.userPrefix.toUpperCase(),
+      maxUsages: formValue.maxUsages,
       startDate: this.formatDate(formValue.startDate),
       expiryDate: this.formatDate(formValue.expiryDate)
     };

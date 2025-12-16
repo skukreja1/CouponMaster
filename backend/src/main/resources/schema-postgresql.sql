@@ -21,6 +21,8 @@ CREATE TABLE IF NOT EXISTS campaign (
     description VARCHAR(2000),
     pos_code VARCHAR(50),
     atg_code VARCHAR(50),
+    prefix VARCHAR(6) NOT NULL CHECK (prefix LIKE 'FF%' AND LENGTH(prefix) = 6),
+    max_usages INTEGER DEFAULT 1 NOT NULL CHECK (max_usages > 0),
     start_date DATE NOT NULL,
     expiry_date DATE NOT NULL CHECK (expiry_date >= start_date),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
@@ -31,9 +33,7 @@ CREATE TABLE IF NOT EXISTS campaign (
 CREATE TABLE IF NOT EXISTS coupon_batch (
     id BIGINT DEFAULT nextval('coupon_batch_seq') PRIMARY KEY,
     campaign_id BIGINT NOT NULL REFERENCES campaign(id) ON DELETE CASCADE,
-    prefix VARCHAR(6) NOT NULL CHECK (prefix LIKE 'FF%' AND LENGTH(prefix) = 6),
     coupon_count INTEGER NOT NULL CHECK (coupon_count > 0 AND coupon_count <= 3000000),
-    max_usages INTEGER DEFAULT 1 NOT NULL CHECK (max_usages > 0),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     active BOOLEAN DEFAULT TRUE NOT NULL
