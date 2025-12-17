@@ -33,7 +33,7 @@ public class Campaign {
     @Column(name = "atg_code", length = 50)
     private String atgCode;
 
-    @Column(nullable = false, length = 6)
+    @Column(nullable = false, unique = true, length = 6)
     private String prefix;
 
     @Column(name = "max_usages", nullable = false)

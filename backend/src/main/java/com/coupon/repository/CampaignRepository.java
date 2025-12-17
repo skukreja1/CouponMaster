@@ -20,4 +20,8 @@ public interface CampaignRepository extends JpaRepository<Campaign, Long> {
 
     @Query("SELECT c FROM Campaign c WHERE c.active = true ORDER BY c.createdAt DESC")
     List<Campaign> findAllActiveCampaigns();
+
+    boolean existsByPrefix(String prefix);
+
+    boolean existsByPrefixAndIdNot(String prefix, Long id);
 }

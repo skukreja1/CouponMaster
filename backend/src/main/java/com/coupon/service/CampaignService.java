@@ -61,6 +61,10 @@ public class CampaignService {
             throw new RuntimeException("Prefix must be exactly 6 characters (FF + 4 user characters)");
         }
 
+        if (campaignRepository.existsByPrefix(prefix)) {
+            throw new RuntimeException("Coupon prefix '" + dto.getUserPrefix().toUpperCase() + "' is already in use. Please choose a different 4-character code.");
+        }
+
         Campaign campaign = Campaign.builder()
                 .name(dto.getName())
                 .description(dto.getDescription())
@@ -92,6 +96,10 @@ public class CampaignService {
         String prefix = PREFIX_START + dto.getUserPrefix().toUpperCase();
         if (prefix.length() != 6) {
             throw new RuntimeException("Prefix must be exactly 6 characters (FF + 4 user characters)");
+        }
+
+        if (campaignRepository.existsByPrefixAndIdNot(prefix, id)) {
+            throw new RuntimeException("Coupon prefix '" + dto.getUserPrefix().toUpperCase() + "' is already in use. Please choose a different 4-character code.");
         }
 
         campaign.setName(dto.getName());
