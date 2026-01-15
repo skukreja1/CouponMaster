@@ -23,6 +23,9 @@ public interface CouponRepository extends JpaRepository<Coupon, Long>, JpaSpecif
 
     Page<Coupon> findByBatchId(Long batchId, Pageable pageable);
 
+    @Query("SELECT c FROM Coupon c WHERE c.batch.id = :batchId")
+    java.util.List<Coupon> findAllByBatchId(@Param("batchId") Long batchId);
+
     @Query("SELECT c FROM Coupon c JOIN FETCH c.batch b JOIN FETCH b.campaign WHERE c.code = :code")
     Optional<Coupon> findByCodeWithBatchAndCampaign(@Param("code") String code);
 

@@ -66,9 +66,39 @@
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef>Actions</th>
         <td mat-cell *matCellDef="let batch" class="actions-cell">
-          <button mat-icon-button (click)="exportBatch(batch.id)" matTooltip="Export CSV">
-            <mat-icon>download</mat-icon>
-          </button>
+          <ng-container *ngIf="!getExportJob(batch.id) || getExportJob(batch.id)?.status === 'FAILED'">
+            <button 
+              mat-icon-button 
+              (click)="exportBatch(batch.id)" 
+              [disabled]="isExporting(batch.id)"
+              matTooltip="Generate Export">
+              <mat-icon *ngIf="!isExporting(batch.id)">file_download</mat-icon>
+              <mat-spinner *ngIf="isExporting(batch.id)" diameter="20"></mat-spinner>
+            </button>
+          </ng-container>
+
+          <ng-container *ngIf="getExportJob(batch.id)?.status === 'PENDING' || getExportJob(batch.id)?.status === 'PROCESSING'">
+            <button mat-icon-button disabled matTooltip="Generating...">
+              <mat-spinner diameter="20"></mat-spinner>
+            </button>
+          </ng-container>
+
+          <ng-container *ngIf="getExportJob(batch.id)?.status === 'COMPLETED'">
+            <button 
+              mat-icon-button 
+              color="primary"
+              (click)="downloadExport(batch.id)" 
+              matTooltip="Download CSV ({{ getExportJob(batch.id)?.totalRecords | number }} records)">
+              <mat-icon>download</mat-icon>
+            </button>
+            <button 
+              mat-icon-button 
+              (click)="clearExportJob(batch.id)" 
+              matTooltip="Clear">
+              <mat-icon>close</mat-icon>
+            </button>
+          </ng-container>
+
           <button 
             mat-icon-button 
             *ngIf="batch.active"

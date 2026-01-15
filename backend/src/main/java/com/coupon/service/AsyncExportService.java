@@ -98,7 +98,7 @@ public class AsyncExportService {
 
             if ("BATCH".equals(job.getExportType())) {
                 fileName = "batch_" + job.getBatchId() + "_" + timestamp + ".csv";
-                coupons = couponRepository.findByBatchId(job.getBatchId());
+                coupons = couponRepository.findAllByBatchId(job.getBatchId());
             } else {
                 fileName = "all_coupons_" + timestamp + ".csv";
                 coupons = couponRepository.findAll();

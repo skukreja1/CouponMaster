@@ -75,6 +75,19 @@ export interface CouponSearch {
   size?: number;
 }
 
+export interface ExportJob {
+  id: number;
+  batchId?: number;
+  campaignId?: number;
+  exportType: string;
+  status: 'PENDING' | 'PROCESSING' | 'COMPLETED' | 'FAILED';
+  fileName?: string;
+  totalRecords?: number;
+  errorMessage?: string;
+  createdAt: string;
+  completedAt?: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -191,6 +204,48 @@ export class ApiService {
       const a = document.createElement('a');
       a.href = downloadUrl;
       a.download = 'all_coupons.csv';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(downloadUrl);
+      a.remove();
+    });
+  }
+
+  submitBatchExport(batchId: number): Observable<ExportJob> {
+    return this.http.post<ExportJob>(`${this.apiUrl}/export/batch/${batchId}`, {});
+  }
+
+  submitAllExport(): Observable<ExportJob> {
+    return this.http.post<ExportJob>(`${this.apiUrl}/export/all`, {});
+  }
+
+  getExportJobStatus(jobId: number): Observable<ExportJob> {
+    return this.http.get<ExportJob>(`${this.apiUrl}/export/job/${jobId}`);
+  }
+
+  getExportJobs(): Observable<ExportJob[]> {
+    return this.http.get<ExportJob[]>(`${this.apiUrl}/export/jobs`);
+  }
+
+  getExportJobsForBatch(batchId: number): Observable<ExportJob[]> {
+    return this.http.get<ExportJob[]>(`${this.apiUrl}/export/jobs/batch/${batchId}`);
+  }
+
+  downloadExport(jobId: number): void {
+    const credentials = localStorage.getItem('credentials');
+    const url = `${this.apiUrl}/export/download/${jobId}`;
+    
+    fetch(url, {
+      headers: {
+        'Authorization': `Basic ${credentials}`
+      }
+    })
+    .then(response => response.blob())
+    .then(blob => {
+      const downloadUrl = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = downloadUrl;
+      a.download = `export_${jobId}.csv`;
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(downloadUrl);
