@@ -132,17 +132,37 @@ This design ensures consistency across all coupons within a campaign and simplif
 }
 ```
 
-### Export (Admin)
-- `GET /api/export/batch/{id}` - Export batch as CSV
-- `GET /api/export/all` - Export all coupons as CSV
+### Export (Admin - Async)
+- `POST /api/export/batch/{id}` - Submit batch export job (returns ExportJob)
+- `GET /api/export/job/{id}` - Check export job status
+- `GET /api/export/download/{id}` - Download completed export file
+
+**Export Job Response:**
+```json
+{
+  "id": 2,
+  "batchId": 19,
+  "campaignId": 6,
+  "exportType": "BATCH",
+  "status": "COMPLETED",
+  "fileName": "batch_19_20260115_211622.csv",
+  "totalRecords": 1000,
+  "errorMessage": null,
+  "createdAt": "2026-01-15T21:16:22.618946679",
+  "completedAt": "2026-01-15T21:16:22.89567273"
+}
+```
+
+Export jobs use async processing with status tracking (PENDING → PROCESSING → COMPLETED/FAILED).
 
 ## Key Design Decisions
 1. **Campaign-level settings**: All coupon settings (prefix, maxUsages, dates, codes) are defined at campaign level
 2. **Simplified batch creation**: Batches only require campaign selection and coupon count
 3. **Memory-safe batch generation**: JDBC batch inserts limited to 5000 rows per batch
 4. **Global uniqueness**: Coupon codes checked for global uniqueness during generation
-5. **Streaming export**: CSV exports use streaming to handle large datasets
+5. **Async CSV export**: Export jobs run asynchronously with status tracking, enabling UI feedback
 6. **Database URL handling**: Custom DataSourceConfig converts Replit's PostgreSQL URL format to JDBC format
+7. **Unique campaign prefixes**: Each campaign must have a unique prefix to avoid code conflicts
 
 ## Running Locally
 1. Backend: `cd backend && mvn spring-boot:run` (port 8080)
